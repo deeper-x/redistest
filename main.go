@@ -8,11 +8,6 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
-// DBManager is interface for redis db
-type DBManager interface {
-	SetValue(key string, value interface{}, expiration time.Duration) error
-}
-
 // DB redis client struct
 type DB struct {
 	Client *redis.Client
@@ -22,8 +17,11 @@ type DB struct {
 func main() {
 	db := NewDB()
 
-	DoSomething(db, "demo", "value")
-	log.Println(db)
+	err := db.SetValue("demo", "value", time.Duration(0)*time.Second)
+	if err != nil {
+		log.Panic(err)
+	}
+
 }
 
 // NewDB return myclient instance
@@ -52,13 +50,4 @@ func (db DB) SetValue(key string, value interface{}, expiration time.Duration) e
 	}
 
 	return nil
-}
-
-// DoSomething is a mocked function
-func DoSomething(db DBManager, key, value string) {
-	err := db.SetValue(key, value, time.Duration(0)*time.Second)
-
-	if err != nil {
-		panic(err)
-	}
 }

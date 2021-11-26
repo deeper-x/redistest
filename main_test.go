@@ -28,12 +28,15 @@ func TestSet(t *testing.T) {
 	}
 }
 
-func TestDoSomething(t *testing.T) {
+func TestSetValue(t *testing.T) {
 	db := new(MockedClient)
 	k := "demo"
 	v := "test"
 
 	db.On("SetValue", k, v, time.Duration(0)*time.Second).Return(&redis.StatusCmd{})
 
-	DoSomething(db, k, v)
+	err := db.SetValue(k, v, time.Duration(0)*time.Second)
+	if err != nil {
+		t.Error(err)
+	}
 }
